@@ -1,0 +1,1221 @@
+---
+openapi: 3.0.1
+info:
+  title: Succession Request CRUD API
+  description: Read and Update operations on Sucession requests. To get the details of a request, only the uuid is allowed
+  version: 1.0.0
+servers:
+# Added by API Auto Mocking Plugin
+- description: SwaggerHub API Auto Mocking
+  url: https://virtserver.swaggerhub.com/trialcardif/SuccessionRequest/1.0.0
+- url: https://virtserver.swaggerhub.com/MY-CARDIF/AdhesionRequest/1.1
+  description: SwaggerHub API Auto Mocking
+- url: http://localhost:8080
+  description: Generated server url
+tags:
+- name: Business Succession Request Services
+  description: requests micro services
+paths:
+  '/v1/successions':
+    post:
+      tags:
+        - Business Succession Request Services
+      summary: Create a new Succesion request
+      operationId: createSuccession
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SuccessionBView'
+      parameters:
+        - name: Authorization
+          in: header
+          description: application token
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        '201':
+          description: The request has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessionRView'
+        '400':
+          description: >-
+            One of the mandatory field is missing(processType)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+
+    get:
+      tags:
+      - Business Succession Request Services
+      summary: get a request by uuid
+      description: Return the complete document
+      operationId: getSuccessionByClientId
+      parameters:
+      - name: Authorization 
+        in: header
+        description: application token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - in: query
+        description: The client identifier
+        required: true
+        name: idClient
+        explode: false
+        schema:
+          type: string
+      - in: query
+        description: The issuer client identifier
+        required: true
+        name: issuer
+        explode: false
+        schema:
+          type: string          
+      - in: query
+        description: The scheme client identifier
+        required: true
+        name: scheme
+        explode: false
+        schema:
+          type: string 
+      responses:
+        "200":
+          description: Request informations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessionRView'
+        "400":
+          description: Invalid uuid (must have 36 caracters)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "401":
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        "404":
+          description: The request was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+                
+  '/v1/successions/deceased':
+    get:
+      tags:
+      - Business Succession Request Services
+      summary: Get the Client role as deceased (insured) person
+      operationId: getDeceasedByClientId
+      parameters:
+      - name: Authorization 
+        in: header
+        description: application token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - in: query
+        description: The client identifier
+        required: true
+        name: idClient
+        explode: false
+        schema:
+          type: string
+      - in: query
+        description: The issuer client identifier
+        required: true
+        name: issuer
+        explode: false
+        schema:
+          type: string          
+      - in: query
+        description: The scheme client identifier
+        required: true
+        name: scheme
+        explode: false
+        schema:
+          type: string           
+      responses:
+        "200":
+          description: Requests found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deceased'
+        "400":
+          description: Invalid client identfifier
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "401":
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        "404":
+          description: No request was found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+ 
+  '/v1/successions/notifier':
+    get:
+      tags:
+      - Business Succession Request Services
+      summary: Get the Cardif referent responsible for piloting the request
+      operationId: getNotifierByClientId
+      parameters:
+      - name: Authorization 
+        in: header
+        description: application token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - in: query
+        description: The client identifier
+        required: true
+        name: idClient
+        explode: false
+        schema:
+          type: string
+      - in: query
+        description: The issuer client identifier
+        required: true
+        name: issuer
+        explode: false
+        schema:
+          type: string          
+      - in: query
+        description: The scheme client identifier
+        required: true
+        name: scheme
+        explode: false
+        schema:
+          type: string           
+      responses:
+        "200":
+          description: Requests found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notifier'
+        "400":
+          description: Invalid client identfifier
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "401":
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        "404":
+          description: No request was found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+               
+  '/v1/successions/{uuid}':
+    get:
+      tags:
+      - Business Succession Request Services
+      summary: get a request by uuid
+      description: Return the complete document
+      operationId: getSuccessionByUUID
+      parameters:
+      - name: Authorization 
+        in: header
+        description: application token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: uuid
+        in: path
+        description: Universal unique identifier of the request
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 36
+          minLength: 36
+          type: string
+      responses:
+        "200":
+          description: Request informations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessionRView'
+        "400":
+          description: Invalid uuid (must have 36 caracters)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "401":
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        "404":
+          description: The request was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+                
+    put:
+      tags:
+      - Business Succession Request Services
+      summary: Request update
+      description: Global Succession Request update operation
+      operationId: updateSuccessionByUUID
+      parameters:
+      - name: Authorization 
+        in: header
+        description: application token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: uuid
+        in: path
+        description: Universal unique identifier of the request
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 36
+          minLength: 36
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SuccessionRView'
+      responses:
+        "200":
+          description: A request has been updated
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SuccessionRView'
+        "400":
+          description: Invalid uuid (must have 36 characters)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "401":
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        "404":
+          description: The request was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+                
+  '/v1/successions/{uuid}/deceased':
+    put:
+      tags:
+      - Business Succession Request Services
+      summary: Request update
+      description: update deceased informations
+      operationId: setDeceased
+      parameters:
+      - name: Authorization 
+        in: header
+        description: application token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: uuid
+        in: path
+        description: Universal unique identifier of the request
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 36
+          minLength: 36
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Deceased'
+      responses:
+        "200":
+          description: Deceased informations have been updated successfully
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Deceased'
+        "400":
+          description: Invalid uuid (must have 36 charcacters)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "401":
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        "404":
+          description: The request was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  '/v1/successions/{uuid}/notifier':
+    put:
+      tags:
+      - Business Succession Request Services
+      summary: Request update
+      description: update notifier informations
+      operationId: setNotifier
+      parameters:
+      - name: Authorization 
+        in: header
+        description: application token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: uuid
+        in: path
+        description: Universal unique identifier of the request
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 36
+          minLength: 36
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Notifier'
+      responses:
+        "200":
+          description: Deceased informations have been updated successfully
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Notifier'
+        "400":
+          description: Invalid uuid (must have 36 charcacters)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "401":
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        "404":
+          description: The request was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  '/v1/successions/{uuid}/folders':
+    get:
+      tags:
+      - Business Succession Request Services
+      summary: get folders of succession request by uuid
+      description: Return the array folders informations
+      operationId: getFoldersByUUID
+      parameters:
+      - name: Authorization 
+        in: header
+        description: application token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: uuid
+        in: path
+        description: Universal unique identifier of the request
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 36
+          minLength: 36
+          type: string
+      responses:
+        "200":
+          description: Request informations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessionFoldersView'
+        "400":
+          description: Invalid uuid (must have 36 caracters)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "401":
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        "404":
+          description: The request was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+                
+    put:
+      tags:
+      - Business Succession Request Services
+      summary: Request update
+      description: Request update by adding folders informations
+      operationId: setFolders
+      parameters:
+      - name: Authorization 
+        in: header
+        description: application token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: uuid
+        in: path
+        description: Universal unique identifier of the request
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 36
+          minLength: 36
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SuccessionFoldersView'
+      responses:
+        "200":
+          description: Client informations have been updated successfully
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SuccessionFoldersView'
+        "400":
+          description: Invalid uuid (must have 36 charcacters)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "401":
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        "404":
+          description: The request was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  '/v1/successions/{uuid}/folder-policies':
+    get:
+      tags:
+      - Business Succession Request Services
+      summary: get contracts of a folder succession request by uuid
+      description: Return the array contracts informations
+      operationId: getPoliciesFolderByUUID
+      parameters:
+      - name: Authorization 
+        in: header
+        description: application token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: uuid
+        in: path
+        description: Universal unique identifier of the request
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 36
+          minLength: 36
+          type: string
+      - in: query
+        description: The client identifier
+        required: true
+        name: FolderId
+        explode: false
+        schema:
+          type: string
+      - in: query
+        description: The issuer folder identifier
+        required: true
+        name: issuer
+        explode: false
+        schema:
+          type: string          
+      - in: query
+        description: The scheme folder identifier
+        required: true
+        name: scheme
+        explode: false
+        schema:
+          type: string
+          
+      responses:
+        "200":
+          description: Request informations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessionFolderPoliciesView'
+        "400":
+          description: Invalid uuid (must have 36 caracters)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "401":
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        "404":
+          description: The request was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+    put:
+      tags:
+      - Business Succession Request Services
+      summary: Request update
+      description: Request update by adding contracts informations
+      operationId: setPoliciesFolder
+      parameters:
+      - name: Authorization 
+        in: header
+        description: application token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: uuid
+        in: path
+        description: Universal unique identifier of the request
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 36
+          minLength: 36
+          type: string
+      - in: query
+        description: The client identifier
+        required: true
+        name: FolderId
+        explode: false
+        schema:
+          type: string
+      - in: query
+        description: The issuer folder identifier
+        required: true
+        name: issuer
+        explode: false
+        schema:
+          type: string          
+      - in: query
+        description: The scheme folder identifier
+        required: true
+        name: scheme
+        explode: false
+        schema:
+          type: string
+             
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SuccessionFolderPoliciesView'
+      responses:
+        "200":
+          description: Client informations have been updated successfully
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SuccessionFolderPoliciesView'
+        "400":
+          description: Invalid uuid (must have 36 charcacters)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "401":
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        "404":
+          description: The request was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+                
+components:
+  schemas:
+  
+    SuccessionFoldersView:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        folders:
+          type: array
+          items:
+            $ref: '#/components/schemas/Folder'
+
+    SuccessionFolderPoliciesView:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        folder:
+          type: object
+          properties:
+            folderId:
+              type: string
+            policies:
+              type: array
+              items:
+                $ref: '#/components/schemas/Policy'
+ 
+    SuccessionBView :
+    # split shemas into the different collection
+      allOf:
+      # Add request generic attributes
+      - $ref: '#/components/schemas/RequestBody'
+      # Add succession attributes      
+      - $ref: '#/components/schemas/SuccessionCreation'
+
+    SuccessionRView :
+    # split shemas into the different collection
+      allOf:
+      # Add request generic attributes
+      - $ref: '#/components/schemas/RequestResponse'
+      # Add succession attributes      
+      - $ref: '#/components/schemas/SuccessionUpdate'
+      - type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          
+    Address:
+      type: object
+      properties:
+        addresseeComplement:
+          type: string
+        addressee:
+          type: string
+        countryCode:
+          type: string
+        geographicComplement:
+          type: string
+        locality:
+          type: string
+        numberAndStreet:
+          type: string
+        postCode:
+          type: string
+        stateCode:
+          type: string
+        town:
+          type: string
+          
+    Amount:
+      type: object
+      properties:
+        value:
+          type: integer
+          format: int64
+        decimals:
+          type: integer
+          format: int64          
+        currency:
+          type: string
+
+    ## Shema duplicated from gereric request            
+    ClientRole:
+      allOf:
+      # oneOf don't use (bug Java), but choice beetween Person or Entity is necessary
+        # The role of the Client as deceased (insured) person
+      - $ref: '#/components/schemas/Identifiers'        
+      - $ref: '#/components/schemas/Person'
+      - $ref: '#/components/schemas/LegalEntity'
+      - type: object
+        properties:
+          roleType:
+            type: string     
+          
+    Policy:
+      type: object
+      description: "An insurance policy"
+      properties:
+        contratId:
+          type: string
+          description: "Contract number / indentifier"
+        status:
+          type: string
+          description: "Contract payment status (repository code) for all Beneficiaries combined : Paid up / non Paid up / Partially Paid up"        
+        value:
+          $ref: '#/components/schemas/Amount'
+          # "Contract value for distribution to beneficiaries"
+        beneficiaryType:
+          type: string
+          description: "Beneficiary type (repository code) - Standard clause / Designated Benefiaries"
+        taxCode :
+          type: string
+          description: "Tax (repository code) applicable to the Contract : None / 9901 / 757B / 9901 and 757B/ ..."
+        familyCode :
+          type: string        
+          description: "Insurance family (repository code) : Life insurance / Capi / Contingency ..."
+        networkCode:
+          type: string        
+          description: "Network distribution (repository code) : Cortal / BNP / Direct ..."   
+        brokerRegion :
+          type: string        
+          description: "Broker Region (repository code) where the contract was subscribed"
+        structureCode:
+          type: string        
+          description: "The assigned Cardif Structure (repository code) : 45 DR Paris Ouest / 107 DR Rennes Ouest / 124 DR Lyon-Rhône Auvergne / ..."
+        system:
+          type: string            
+          description: "Computer System used to manage the succession (HERA / Orion)"
+        particulartities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Particularity'
+    
+    # Decesed role must matched with "client" generic request
+    Deceased:
+      allOf:
+      - $ref: '#/components/schemas/ClientRole'
+      - type: object
+        properties:
+          deceadedOn:
+            type: string
+            format: date
+            description: "Date of decease"
+          notifiedOn:
+            type: string
+            format: date
+            description: "The date Cardif was notified of the decease"
+    
+    ## Shema duplicated from gereric request                    
+    Distributor:
+      type: object
+      properties:
+        brokerId:
+          type: string
+        commercialId:
+          type: string
+        structuralId:
+          type: string
+        channel:
+          type: string
+        advisorId:
+          type: string
+        advisorAgency:
+          type: string
+ 
+    DistributorSuccession:
+      allOf:
+      - $ref: '#/components/schemas/Distributor'
+      - type: object
+      description: "The role of a Distributor in the context of a SuccessionRequest"
+      properties:
+        contactSurname:
+          type: string
+          description : "Surname of person in contact with Referent"
+        contactFirstNames:
+          type: string
+          description : "Firstname(s) of person in contact with Referent"
+          
+    Folder:
+      type: object
+      description: "A folder that groups Contracts"
+      properties:
+        folderId:
+          $ref: '#/components/schemas/Identifier'
+          # description: "The folder's identifier in an external system"
+        contracts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Policy'
+
+    ## Shema duplicated from gereric request             
+    Identifier:
+      type: object
+      properties:
+        objectId:
+          type: string
+          description: identifier of the objet
+        issuer:
+          type: string
+        scheme:
+          type: string
+
+    Identifiers:
+      type: object
+      properties:
+        identifier:
+          type: array
+          items:
+            $ref: '#/components/schemas/Identifier'
+          
+    ## Shema duplicated from gereric request   
+    Issuer:
+      type: object
+      properties:
+        issuerId:
+          $ref: '#/components/schemas/Identifier'       
+        person:
+          $ref: '#/components/schemas/Person'
+        roleType:
+          type: string
+
+    IssuerSuccession:
+      $ref: '#/components/schemas/Issuer'
+
+      
+   # The Cardif notifier (referent responsible) for piloting the request
+    Notifier:
+      type: object
+      description : "The Cardif referent responsible for piloting the request"
+      properties:
+        referentId:
+          $ref: '#/components/schemas/Identifier'
+          #"Identifier of Referent"
+        surname:
+          type: string
+          description: "Surname of Referent"
+        firstname:
+          type: string
+          description: "First name of Referent"            
+              
+    LegalEntity:
+      type: object
+      properties:
+        name:
+          type: string
+          
+    Litigation:
+      type: object
+      description: ""
+      properties:
+        incidentNumber:
+          type: string
+        startedAt:
+          type: string
+          format: date
+        endedAt:
+          type: string
+          format: date          
+          
+    Particularity:
+      type: object
+      description: "A particularity of a Contract"
+      properties:
+        code:
+          type: string
+          description: "A (repository code) particularity : Advance / Co-Adhesion / Collateral / Delegation / Pledge / Non tax-resident / Incapacity ..."
+        label:
+          type: string
+
+    ## Shema duplicated from gereric request             
+    Person:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Title (repositorycode) Mr, Mrs, Miss. / French Format-HARVEST  M - Monsieur, MME - Madame, MLLE - Mademoiselle  (obsolete ?)
+        surname:
+          type: string
+          description: Surname
+        firstName:
+          type: string
+          description: First name(s)
+        customaryName:
+          type: string
+          description: Customary name
+        maidenName:
+          type: string
+          description: The orignal surname of a married woman, before she ever married      
+        gender:
+          type: string
+          description: Gender (repository code), derivable from title
+        birthDate:
+          type: string
+          description: Date of birth
+          format: date
+        birthCounty:
+          type: string
+          description: County (e.g. French Department) of birth
+        birthCountry:
+          type: string
+          description: Country (repository code) of birth
+        birthTown:
+          type: string
+          description: Town of birth.  (French - name of Commune)
+        homeAddress:
+          $ref: '#/components/schemas/Address'
+      
+    ## Shema duplicated from gereric request    
+    RequestBody:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time      
+        emittedAt:
+          type: string
+          format: date-time
+        processLimitDate:
+          type: string
+          format: date-time
+        processStartedAt:
+          type: string
+          format: date-time
+        currentStatus:
+          type: string
+        currentStatusAt:
+          type: string
+          format: date-time
+        lastModifiedAt:
+          type: string
+          format: date-time          
+        externalId:
+          $ref: '#/components/schemas/Identifier'
+        requestType:
+          type: string
+        source:
+          type: string
+
+    ## Shema duplicated from gereric request    
+    RequestResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        emittedAt:
+          type: string
+          format: date-time
+        receivedAt:
+          type: string
+          format: date-time
+        processLimitDate:
+          type: string
+          format: date-time
+        processStartedAt:
+          type: string
+          format: date-time
+        currentStatus:
+          type: string
+        currentStatusAt:
+          type: string
+          format: date-time
+        externalId:
+          $ref: '#/components/schemas/Identifier'
+        lastModifiedAt:
+          type: string
+          format: date-time
+        lastModifiedStatusReason:
+          type: string
+        requestType:
+          type: string
+        source:
+          type: string
+        statuses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Status'
+            
+    ## Shema duplicated from gereric request   
+    Status:
+      type: object
+      properties:
+        status:
+          type: string
+        statusAt:
+          type: string
+          format: date-time
+        step:
+          type: string
+
+    SuccessionCreation:
+      allOf:
+      - $ref: '#/components/schemas/Succession'
+            
+    SuccessionUpdate:
+      allOf:
+      - $ref: '#/components/schemas/Succession'
+      - type: object
+        properties:    
+          folders:
+              type: array
+              items:
+                $ref: '#/components/schemas/Folder'
+          litigation:
+            $ref: '#/components/schemas/Litigation'
+          
+    Succession:
+      type: object
+      description: "A succession request following the decease of an insured person. This type of Request has related 'child' BeneficiarySettlementRequest(s), created as each Beneficiary is identified. "
+      properties:
+        processType:
+          type: string
+          description: "Process Type (repository code) : VIP / Non-VIP ..."
+        department:
+          type: string
+          description: "The department (repository code) responsible for the Request : Digital Courtage / Nanterre Succ"        
+        deceased:
+          $ref: '#/components/schemas/Deceased'
+          # The role of the Client as deceased (insured) person
+        notifier:
+          $ref: '#/components/schemas/Notifier'        
+        distributors:
+          type: array
+          items:
+            $ref: '#/components/schemas/DistributorSuccession'
+        issuers:
+          type: array
+          items:
+            $ref: '#/components/schemas/IssuerSuccession'            
+
+          
+    ApiError:
+      required:
+      - codeHTTP
+      - codeMessage
+      - detailsMessage
+      - message
+      - timestamp
+      type: object
+      properties:
+        codeHTTP:
+          type: string
+          description: HTTP error code
+        timestamp:
+          type: string
+          description: Timestamp when the error occurs
+          format: date-time
+        codeMessage:
+          type: string
+          description: Applicative error code
+        message:
+          type: string
+          description: Summary description of the error
+        detailsMessage:
+          type: string
+          description: Details description of the error
+        incidentId:
+          type: string
+        correlationId:
+          type: string
+        subErrors:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubError'
+    SubError:
+      required:
+      - codeMessage
+      type: object
+      properties:
+        codeMessage:
+          type: string
+          description: Applicative error code
+        message:
+          type: string
+          description: Summary description of the error
+        detailsMessage:
+          type: string
+          description: Details description of the error
+    UnauthorizedError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Error message
+      description: Access token is missing or invalid

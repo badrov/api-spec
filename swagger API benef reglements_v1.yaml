@@ -1,0 +1,1270 @@
+---
+openapi: 3.0.1
+info:
+  title: Settlement Request CRUD API
+  description: Read and Update operations on settlement requests. To get the details of a request, only the uuid is allowed
+  version: 1.0.0
+servers:
+# Added by API Auto Mocking Plugin
+# Added by API Auto Mocking Plugin
+- description: SwaggerHub API Auto Mocking
+  url: https://virtserver.swaggerhub.com/trialcardif/SettlementRequest/1.0.0
+- description: SwaggerHub API Auto Mocking
+  url: https://virtserver.swaggerhub.com/trialcardif/settlementRequest/1.0.0
+- url: https://virtserver.swaggerhub.com/MY-CARDIF/SettlementRequest/1.1
+  description: SwaggerHub API Auto Mocking
+- url: http://localhost:8080
+  description: Generated server url
+tags:
+- name: Business Settlement Request Services
+  description: requests micro services
+paths:
+  '/v1/settlements':
+    post:
+      tags:
+        - Business Settlement Request Services
+      summary: Create a new Settlement request
+      operationId: createSettlement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BeneficiarySettlementView'
+      parameters:
+        - name: Authorization
+          in: header
+          description: application token
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        '201':
+          description: The request has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BeneficiarySettlementView'
+        '400':
+          description: >-
+            One of the mandatory field is missing(processType)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+
+    get:
+      tags:
+      - Business Settlement Request Services
+      summary: get a request by uuid
+      description: Return the complete document
+      operationId: getSettlementBySuccessionId
+      parameters:
+      - name: Authorization 
+        in: header
+        description: application token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: successionId
+        in: query
+        description: Universal unique identifier of the succession
+        required: true
+        explode: false
+        schema:
+          maxLength: 36
+          minLength: 36
+          type: string          
+      responses:
+        "200":
+          description: Request informations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BeneficiariesSettlementSuccessionView'
+        "400":
+          description: Invalid uuid (must have 36 caracters)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "401":
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        "404":
+          description: The request was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+                
+  '/v1/settlements/beneficiary':
+    get:
+      tags:
+      - Business Settlement Request Services
+      summary: Get all settlements of a beneficiary
+      operationId: getAllSettlementsBeneficiary
+      parameters:
+      - name: Authorization 
+        in: header
+        description: application token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - in: query
+        description: The client identifier
+        required: true
+        name: idClient
+        explode: false
+        schema:
+          maxLength: 36
+          minLength: 36
+          type: string
+      - in: query
+        description: The issuer client identifier
+        required: true
+        name: issuer
+        explode: false
+        schema:
+          type: string          
+      - in: query
+        description: The scheme client identifier
+        required: true
+        name: scheme
+        explode: false
+        schema:
+          type: string           
+      responses:
+        "200":
+          description: Requests found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BeneficiaryAllSettlementsView'
+        "400":
+          description: Invalid client identfifier
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "401":
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        "404":
+          description: No request was found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  '/v1/settlements/{uuid}/beneficiary':
+    put:
+      tags:
+      - Business Settlement Request Services
+      summary: Request update
+      description: Update beneficiary settlement informations
+      operationId: setBeneficiarySettlement
+      parameters:
+      - name: Authorization 
+        in: header
+        description: application token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: uuid
+        in: path
+        description: Universal unique identifier of the request
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 36
+          minLength: 36
+          type: string
+      - in: query
+        description: The client identifier
+        required: true
+        name: idClient
+        explode: false
+        schema:
+          maxLength: 36
+          minLength: 36
+          type: string
+      - in: query
+        description: The issuer client identifier
+        required: true
+        name: issuer
+        explode: false
+        schema:
+          type: string          
+      - in: query
+        description: The scheme client identifier
+        required: true
+        name: scheme
+        explode: false
+        schema:
+          type: string          
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BeneficiaryView'
+      responses:
+        "200":
+          description: Client informations have been updated successfully
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BeneficiaryView'
+        "400":
+          description: Invalid uuid (must have 36 charcacters)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "401":
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        "404":
+          description: The request was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'    
+                
+  '/v1/settlements/{uuid}':
+    get:
+      tags:
+      - Business Settlement Request Services
+      summary: get a request by uuid
+      description: Return the complete document
+      operationId: getSettlementByUUID
+      parameters:
+      - name: Authorization 
+        in: header
+        description: application token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: uuid
+        in: path
+        description: Universal unique identifier of the request
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 36
+          minLength: 36
+          type: string
+      responses:
+        "200":
+          description: Request informations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BeneficiarySettlementView'
+        "400":
+          description: Invalid uuid (must have 36 caracters)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "401":
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        "404":
+          description: The request was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+                
+    put:
+      tags:
+      - Business Settlement Request Services
+      summary: Request update
+      description: Global Settlement Request update operation
+      operationId: updateSettlementByUUID
+      parameters:
+      - name: Authorization 
+        in: header
+        description: application token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: uuid
+        in: path
+        description: Universal unique identifier of the request
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 36
+          minLength: 36
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BeneficiarySettlementUpdateView'
+      responses:
+        "200":
+          description: A request has been updated
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BeneficiarySettlementUpdateView'
+        "400":
+          description: Invalid uuid (must have 36 characters)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "401":
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        "404":
+          description: The request was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  '/v1/settlements/{uuid}/beneficiary-policies':
+    get:
+      tags:
+      - Business Settlement Request Services
+      summary: get contracts of beneficiary settlement request by uuid
+      description: Return the array contracts informations
+      operationId: getBeneficiaryPoliciesByUUID
+      parameters:
+      - name: Authorization 
+        in: header
+        description: application token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: uuid
+        in: path
+        description: Universal unique identifier of the request
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 36
+          minLength: 36
+          type: string
+      - in: query
+        description: The client identifier
+        required: true
+        name: idClient
+        explode: false
+        schema:
+          maxLength: 36
+          minLength: 36
+          type: string
+      - in: query
+        description: The issuer client identifier
+        required: true
+        name: issuer
+        explode: false
+        schema:
+          type: string          
+      - in: query
+        description: The scheme client identifier
+        required: true
+        name: scheme
+        explode: false
+        schema:
+          type: string           
+      responses:
+        "200":
+          description: Request informations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BeneficiaryPoliciesView'
+        "400":
+          description: Invalid uuid (must have 36 caracters)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "401":
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        "404":
+          description: The request was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+                
+    put:
+      tags:
+      - Business Settlement Request Services
+      summary: Request update
+      description: Request update by adding contracts informations
+      operationId: setBeneficiaryPolicies
+      parameters:
+      - name: Authorization 
+        in: header
+        description: application token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: uuid
+        in: path
+        description: Universal unique identifier of the request
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 36
+          minLength: 36
+          type: string
+      - in: query
+        description: The client identifier
+        required: true
+        name: idClient
+        explode: false
+        schema:
+          maxLength: 36
+          minLength: 36
+          type: string
+      - in: query
+        description: The issuer client identifier
+        required: true
+        name: issuer
+        explode: false
+        schema:
+          type: string          
+      - in: query
+        description: The scheme client identifier
+        required: true
+        name: scheme
+        explode: false
+        schema:
+          type: string           
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BeneficiaryPoliciesView'
+      responses:
+        "200":
+          description: Client informations have been updated successfully
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BeneficiaryPoliciesView'
+        "400":
+          description: Invalid uuid (must have 36 charcacters)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "401":
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        "404":
+          description: The request was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  '/v1/settlements/{uuid}/beneficiary-settlements':
+    get:
+      tags:
+      - Business Settlement Request Services
+      summary: get settlements of beneficiary settlement request by uuid
+      description: Return the array settlements informations
+      operationId: getBeneficiarySettlementsByUUID
+      parameters:
+      - name: Authorization 
+        in: header
+        description: application token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: uuid
+        in: path
+        description: Universal unique identifier of the request
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 36
+          minLength: 36
+          type: string
+      - in: query
+        description: The client identifier
+        required: true
+        name: idClient
+        explode: false
+        schema:
+          maxLength: 36
+          minLength: 36
+          type: string
+      - in: query
+        description: The issuer client identifier
+        required: true
+        name: issuer
+        explode: false
+        schema:
+          type: string          
+      - in: query
+        description: The scheme client identifier
+        required: true
+        name: scheme
+        explode: false
+        schema:
+          type: string           
+      responses:
+        "200":
+          description: Request informations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BeneficiarySettlementsView'
+        "400":
+          description: Invalid uuid (must have 36 caracters)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "401":
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        "404":
+          description: The request was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+                
+    put:
+      tags:
+      - Business Settlement Request Services
+      summary: Request update
+      description: update / adding beneficiary settlements
+      operationId: setBeneficiarySettlements
+      parameters:
+      - name: Authorization 
+        in: header
+        description: application token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: uuid
+        in: path
+        description: Universal unique identifier of the request
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 36
+          minLength: 36
+          type: string
+      - in: query
+        description: The client identifier
+        required: true
+        name: idClient
+        explode: false
+        schema:
+          maxLength: 36
+          minLength: 36
+          type: string
+      - in: query
+        description: The issuer client identifier
+        required: true
+        name: issuer
+        explode: false
+        schema:
+          type: string          
+      - in: query
+        description: The scheme client identifier
+        required: true
+        name: scheme
+        explode: false
+        schema:
+          type: string           
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BeneficiarySettlementsView'
+      responses:
+        "200":
+          description: Client informations have been updated successfully
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BeneficiarySettlementsView'
+        "400":
+          description: Invalid uuid (must have 36 charcacters)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "401":
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        "404":
+          description: The request was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  '/v1/settlements/{uuid}/beneficiary-payment/{settlementId}':
+    get:
+      tags:
+      - Business Settlement Request Services
+      summary: get beneficiary payment by settlement identifier
+      description: Return the beneficiary payment informations
+      operationId: getBeneficiaryPaymentByUUID
+      parameters:
+      - name: Authorization 
+        in: header
+        description: application token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: uuid
+        in: path
+        description: Universal unique identifier of the request
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 36
+          minLength: 36
+          type: string
+      - name: settlementId
+        in: path
+        description: identifier of the beneficiary settlement
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 36
+          minLength: 36
+          type: string          
+      responses:
+        "200":
+          description: Request informations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BeneficiaryPaymentView'
+        "400":
+          description: Invalid uuid (must have 36 caracters)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "401":
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        "404":
+          description: The request was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+                
+    put:
+      tags:
+      - Business Settlement Request Services
+      summary: Request update payment of the beneficiary
+      description: update payment of the beneficiary settlement
+      operationId: setBeneficiaryPayment
+      parameters:
+      - name: Authorization 
+        in: header
+        description: application token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: uuid
+        in: path
+        description: Universal unique identifier of the request
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 36
+          minLength: 36
+          type: string
+      - name: settlementId
+        in: path
+        description: identifier of the beneficiary settlement
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 36
+          minLength: 36
+          type: string                 
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BeneficiaryPaymentView'
+      responses:
+        "200":
+          description: Client informations have been updated successfully
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BeneficiaryPaymentView'
+        "400":
+          description: Invalid uuid (must have 36 charcacters)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "401":
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        "404":
+          description: The request was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+                
+components:
+  schemas:
+  
+    BeneficiariesSettlementSuccessionView:
+      type: object
+      properties:
+        count:
+          type: integer
+        range:
+          type: string
+        query:
+          type: string        
+        results:    
+          type: array
+          items:        
+            $ref: '#/components/schemas/BeneficiarySettlement'
+            
+    BeneficiaryPoliciesView:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        beneficiaryId:
+          $ref: '#/components/schemas/Identifier'        
+        policies:
+          type: array
+          items:
+            $ref: '#/components/schemas/Policy'
+ 
+    BeneficiaryPaymentView:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        settlement:
+          $ref: '#/components/schemas/Settlement'
+ 
+    BeneficiarySettlementView :
+    # split shemas into the different collection
+      allOf:
+      # Add request generic attributes
+      - $ref: '#/components/schemas/Request'
+      # Add succession attributes      
+      - $ref: '#/components/schemas/BeneficiarySettlement'
+
+    BeneficiarySettlementUpdateView :
+      $ref: '#/components/schemas/BeneficiarySettlement'
+      
+    BeneficiarySettlementsView :
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        beneficiaryId:
+          $ref: '#/components/schemas/Identifier'        
+        settlements:
+          type: array
+          items:
+            $ref: '#/components/schemas/Settlement'
+
+    BeneficiaryAllSettlementsView :
+      type: object
+      properties:
+        identifier:
+          $ref: '#/components/schemas/Identifier'        
+        settlements:                
+          type: array
+          items:
+            $ref: '#/components/schemas/Settlement'
+            # settlements contracts beneficiary
+              
+    BeneficiaryView:
+      allOf:
+      - $ref: '#/components/schemas/Beneficiary'
+      - type: object
+        properties:
+          uuid:
+            type: string
+            format: uuid
+            
+    Address:
+      type: object
+      properties:
+        addresseeComplement:
+          type: string
+        addressee:
+          type: string
+        countryCode:
+          type: string
+        geographicComplement:
+          type: string
+        locality:
+          type: string
+        numberAndStreet:
+          type: string
+        postCode:
+          type: string
+        stateCode:
+          type: string
+        town:
+          type: string
+          
+    Amount:
+      type: object
+      properties:
+        value:
+          type: integer
+          format: int64
+        decimals:
+          type: integer
+          format: int64          
+        currency:
+          type: string
+
+    BeneficiarySettlement:
+      type: object
+      description: "A Beneficiary Request for settlement in the context of a succession.  This type of Request is always associated with a 'parent' SuccessionRequest."
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        successionId:
+          type: string
+          format: uuid 
+          description: Identifier of the parent (succession)
+        beneficiary:
+            $ref: '#/components/schemas/Beneficiary'
+            # The role of the Client as deceased (insured) person
+        policies:
+          type: array
+          items:
+            $ref: '#/components/schemas/Policy'
+            # contracts beneficiary
+        payments:
+          type: array
+          items:          
+            $ref: '#/components/schemas/Payment'              
+        settlements:                
+          type: array
+          items:
+            $ref: '#/components/schemas/Settlement'
+            # settlements contracts beneficiary            
+            
+
+    ## Shema duplicated from gereric request            
+    ClientRole:
+      allOf:
+      # oneOf don't use (bug Java), but choice beetween Person or Entity is necessary
+        # The role of the Client as deceased (insured) person
+      - $ref: '#/components/schemas/Identifiers'        
+      - $ref: '#/components/schemas/Person'
+      - $ref: '#/components/schemas/LegalEntity'
+      - type: object
+        properties:
+          roleType:
+            type: string     
+            
+    # Subscriber role must matched with "client" generic request
+    Beneficiary:
+      allOf:
+      - $ref: '#/components/schemas/ClientRole'
+      - type: object
+        properties:
+          identifiedAt:
+            type: string
+            format: date
+            description: "The date the beneficiary information was identified"
+          localisedAt:
+            type: string
+            format: date
+            description: "The date the beneficiary information was localised"
+          deceadedRelation:
+            type: string
+            description: "..."            
+          paymentStatus:
+            type: string
+            description: "The (repository code) settlement status for all associated Contracts combined :  Settled / Not settled / Partially settled / Settled awaiting validation / Partially settled awaiting validation"
+
+    Email:
+      type: object
+      properties:
+        emailAddress:
+          type: string
+        type:
+          type: string
+          
+    Policy:
+      type: object
+      description: "An insurance policy"
+      properties:
+        contratId:
+          type: string
+          description: "Contract number / indentifier"
+        status:
+          type: string
+          description: "Contract payment status (repository code) for all Beneficiaries combined : Paid up / non Paid up / Partially Paid up"        
+        value:
+          $ref: '#/components/schemas/Amount'
+          # "Contract value for distribution to beneficiaries"
+        beneficiaryType:
+          type: string
+          description: "Beneficiary type (repository code) - Standard clause / Designated Benefiaries"
+        taxCode :
+          type: string
+          description: "Tax (repository code) applicable to the Contract : None / 9901 / 757B / 9901 and 757B/ ..."
+        familyCode :
+          type: string        
+          description: "Insurance family (repository code) : Life insurance / Capi / Contingency ..."
+        networkCode:
+          type: string        
+          description: "Network distribution (repository code) : Cortal / BNP / Direct ..."   
+        brokerRegion :
+          type: string        
+          description: "Broker Region (repository code) where the contract was subscribed"
+        structureCode:
+          type: string        
+          description: "The assigned Cardif Structure (repository code) : 45 DR Paris Ouest / 107 DR Rennes Ouest / 124 DR Lyon-Rhône Auvergne / ..."
+        system:
+          type: string        
+          description: "..."
+          
+    ## Shema duplicated from gereric request             
+    Identifier:
+      type: object
+      properties:
+        objectId:
+          type: string
+          description: identifier of the objet
+        issuer:
+          type: string
+        scheme:
+          type: string
+
+    Identifiers:
+      type: object
+      properties:
+        identifier:
+          type: array
+          items:
+            $ref: '#/components/schemas/Identifier'
+
+    LegalEntity:
+      type: object
+      properties:
+        name:
+          type: string
+          
+    Payment:
+      type: object
+      properties:
+        paymentId:
+          type: string
+          description: "payment number / indentifier"        
+        amount:
+          $ref: '#/components/schemas/Amount'
+          # ...
+        date:
+          type: string
+          format: date
+        recovery:
+          $ref: '#/components/schemas/Recovery'
+          
+    ## Shema duplicated from gereric request             
+    Person:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Title (repositorycode) Mr, Mrs, Miss. / French Format-HARVEST  M - Monsieur, MME - Madame, MLLE - Mademoiselle  (obsolete ?)
+        surname:
+          type: string
+          description: Surname
+        firstName:
+          type: string
+          description: First name(s)
+        customaryName:
+          type: string
+          description: Customary name
+        maidenName:
+          type: string
+          description: The orignal surname of a married woman, before she ever married      
+        gender:
+          type: string
+          description: Gender (repository code), derivable from title
+        birthDate:
+          type: string
+          description: Date of birth
+          format: date
+        birthCounty:
+          type: string
+          description: County (e.g. French Department) of birth
+        birthCountry:
+          type: string
+          description: Country (repository code) of birth
+        birthTown:
+          type: string
+          description: Town of birth.  (French - name of Commune)
+        address:
+          $ref: '#/components/schemas/Address'
+        eMail:
+          $ref: '#/components/schemas/Email'
+        telephone:
+          $ref: '#/components/schemas/Telephone'
+          
+    Recovery:
+      type: object
+      properties:
+        number:
+          type: string
+        amount:
+          $ref: '#/components/schemas/Amount'
+        initiatedAt:
+          type: string
+          format: date
+        finalisedAt:
+          type: string
+          format: date
+
+    ## Shema duplicated from gereric request    
+    Request:
+      type: object
+      properties:
+        id:
+          type: string
+        requestId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        emittedAt:
+          type: string
+          format: date-time
+        receivedAt:
+          type: string
+          format: date-time
+        processLimitDate:
+          type: string
+          format: date-time
+        processStartedAt:
+          type: string
+          format: date-time
+        currentStatus:
+          type: string
+        currentStatusAt:
+          type: string
+          format: date-time
+        externalId:
+          $ref: '#/components/schemas/Identifier'
+        lastModifiedAt:
+          type: string
+          format: date-time
+        lastModifiedStatusReason:
+          type: string
+        requestType:
+          type: string
+        source:
+          type: string
+        statuses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Status'
+            
+    Settlement:
+      type: object
+      properties:
+        settlementId:
+          type: string
+          description: "settlement number / indentifier"        
+        contratId:
+          type: string
+          description: "Contract number / indentifier"      
+        paymentId:
+          type: string
+          description: "payment number / indentifier"         
+        amount:
+          $ref: '#/components/schemas/Amount'
+          # The amount to which the Beneficiiary is entitled, for the Contract
+        status:
+          type: string
+          description: "The (repository code) settlement status of the amount : Settled / Not settled / Partially settled / Settled awaiting validation / Partially settled awaiting validation"
+        isDeferred:
+          type: boolean
+        deferredUntil:
+          type: string
+          format: date
+
+    ## Shema duplicated from gereric request   
+    Status:
+      type: object
+      properties:
+        status:
+          type: string
+        statusAt:
+          type: string
+          format: date-time
+        step:
+          type: string
+          
+    Telephone:
+      type: object
+      properties:
+        category:
+          type: string
+        countryPrefix:
+          type: string
+        telephoneNumber:
+          type: string
+        type:
+          type: string 
+          
+    ApiError:
+      required:
+      - codeHTTP
+      - codeMessage
+      - detailsMessage
+      - message
+      - timestamp
+      type: object
+      properties:
+        codeHTTP:
+          type: string
+          description: HTTP error code
+        timestamp:
+          type: string
+          description: Timestamp when the error occurs
+          format: date-time
+        codeMessage:
+          type: string
+          description: Applicative error code
+        message:
+          type: string
+          description: Summary description of the error
+        detailsMessage:
+          type: string
+          description: Details description of the error
+        incidentId:
+          type: string
+        correlationId:
+          type: string
+        subErrors:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubError'
+    SubError:
+      required:
+      - codeMessage
+      type: object
+      properties:
+        codeMessage:
+          type: string
+          description: Applicative error code
+        message:
+          type: string
+          description: Summary description of the error
+        detailsMessage:
+          type: string
+          description: Details description of the error
+    UnauthorizedError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Error message
+      description: Access token is missing or invalid
